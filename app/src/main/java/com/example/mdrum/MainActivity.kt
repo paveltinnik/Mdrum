@@ -60,6 +60,10 @@ class MainActivity : AppCompatActivity(), TestView.PieClickListener {
     }
 
     override fun onPieClick(position: Int, percent: Float) {
-        Toast.makeText(this,"当前点击的position："+position + ";百分比："+percent,Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "Currently clicked position：$position; percentage：$percent",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

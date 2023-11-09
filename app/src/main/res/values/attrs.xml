@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TestView">
-        <attr name="circleColor" format="color" />
-        <attr name="lineColor" format="color" />
-        <attr name="aiv_borderColor" format="color" />
-        <attr name="aiv_borderWidth" format="dimension" />
-        <attr name="aiv_initials" format="string" />
+        <attr name="pieChartRadius" format="dimension"/>
+        <attr name="pieChartShowText" format="boolean"/>
+        <attr name="pieChartTextSize" format="dimension"/>
     </declare-styleable>
 </resources>

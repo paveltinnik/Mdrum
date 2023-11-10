@@ -23,6 +23,8 @@ class RainbowDrumView @JvmOverloads constructor(
 
     private var animationListener: Animator.AnimatorListener? = null
 
+    var rotationAnimator: ObjectAnimator? = null
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val width = width.toFloat()
@@ -57,8 +59,18 @@ class RainbowDrumView @JvmOverloads constructor(
 
     fun rotateDrumRandomly() {
         endDeg = (random.nextInt(360)).toFloat()
-        val rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", startDeg, endDeg)
-        rotationAnimator.duration = 1000 // Продолжительность анимации в миллисекундах
+        rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", startDeg, endDeg)
+        rotationAnimator!!.duration = 1000 // Продолжительность анимации в миллисекундах
+
+        rotationAnimator!!.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animator: Animator) {}
+
+            override fun onAnimationEnd(animator: Animator) {}
+
+            override fun onAnimationCancel(animator: Animator) {}
+
+            override fun onAnimationRepeat(animator: Animator) {}
+        })
 
 //        rotationAnimator.addListener(object : Animator.AnimatorListener {
 //
@@ -85,7 +97,7 @@ class RainbowDrumView @JvmOverloads constructor(
 //            override fun onAnimationRepeat(p0: Animator) {}
 //        })
 
-        rotationAnimator.start()
+        rotationAnimator!!.start()
 
 
     }

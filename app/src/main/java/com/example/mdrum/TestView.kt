@@ -63,13 +63,11 @@ class TestView @JvmOverloads constructor(
     }
 
     init {
-//        if (attrs != null) {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TestView)
-            mRadius = typedArray.getDimension(R.styleable.TestView_pieChartRadius, mRadius)
-            mShouldShowText =
-                typedArray.getBoolean(R.styleable.TestView_pieChartShowText, mShouldShowText)
-            mTextSize = typedArray.getDimension(R.styleable.TestView_pieChartTextSize, mTextSize)
-//        }
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TestView)
+        mRadius = typedArray.getDimension(R.styleable.TestView_pieChartRadius, mRadius)
+        mShouldShowText =
+            typedArray.getBoolean(R.styleable.TestView_pieChartShowText, mShouldShowText)
+        mTextSize = typedArray.getDimension(R.styleable.TestView_pieChartTextSize, mTextSize)
 
         mDataList = ArrayList()
 
@@ -90,6 +88,7 @@ class TestView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+
         mCenterX = width.div(2).toFloat()
         mCenterY = height.div(2).toFloat()
 
@@ -159,7 +158,6 @@ class TestView @JvmOverloads constructor(
         xCoefficient: Int, yCoefficient: Int, textOffset: Int,
         quadrant: Boolean, canvas: Canvas
     ) {
-
         val sin = Math.sin(Math.toRadians((pathPercent - countDegree).toDouble()))
         val cos = Math.cos(Math.toRadians((pathPercent - countDegree).toDouble()))
         val pathX = (mCenterX + xCoefficient * mRadius * (if (quadrant) sin else cos)).toFloat()

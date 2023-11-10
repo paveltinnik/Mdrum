@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Mdrum</string>
+
+    <integer-array name="rainbow_colors">
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/indigo</item>
+        <item>@color/violet</item>
+    </integer-array>
 </resources>

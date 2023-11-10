@@ -1,5 +1,6 @@
 package com.example.mdrum
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -20,6 +21,8 @@ class RainbowDrumView @JvmOverloads constructor(
     private var startDeg = 0f
     private var endDeg = 0f
 
+    private var animationListener: Animator.AnimatorListener? = null
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val width = width.toFloat()
@@ -38,6 +41,11 @@ class RainbowDrumView @JvmOverloads constructor(
         }
     }
 
+    // Установка слушателя для завершения анимации
+    fun setAnimationListener(listener: Animator.AnimatorListener) {
+        animationListener = listener
+    }
+
     fun rotateDrum() {
         endDeg = (random.nextInt(360) + 360/7).toFloat()
         val rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", startDeg, endDeg)
@@ -52,6 +60,32 @@ class RainbowDrumView @JvmOverloads constructor(
 
         val rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", 0f, rotationAngle)
         rotationAnimator.duration = rotationDuration
+
+        rotationAnimator.addListener(object : Animator.AnimatorListener {
+
+            override fun onAnimationStart(p0: Animator) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                // Получение угла поворота барабана
+                val rotation = this@RainbowDrumView.rotation % 360
+
+                // Определение цвета по углу поворота
+                val segmentAngle = 360f / colors.size
+                val segmentIndex = (rotation / segmentAngle).toInt()
+                val topSegmentColor = colors[segmentIndex]
+
+                // Вызов слушателя с цветом верхнего сегмента
+                animationListener?.onAnimationEnd(animation)
+//                animationListener?.onAnimationEndWithColor(topSegmentColor)
+            }
+
+            override fun onAnimationCancel(p0: Animator) {}
+
+            override fun onAnimationRepeat(p0: Animator) {}
+        })
+
         rotationAnimator.start()
     }
 
@@ -62,15 +96,4 @@ class RainbowDrumView @JvmOverloads constructor(
     private fun getRandomAngle(): Float {
         return Random().nextInt(360).toFloat()
     }
-
-    fun getRandomColor(): Int {
-        val random = Random()
-        return colors[random.nextInt(colors.size)]
-    }
-
-    fun showResult(color: Int) {
-        // Используйте ImageView или TextView для отображения результата
-    }
-
-
 }

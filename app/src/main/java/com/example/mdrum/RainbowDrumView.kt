@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import java.util.Random
 
@@ -20,8 +21,6 @@ class RainbowDrumView @JvmOverloads constructor(
     private val random = Random()
     private var startDeg = 0f
     private var endDeg = 0f
-
-    private var animationListener: Animator.AnimatorListener? = null
 
     var rotationAnimator: ObjectAnimator? = null
 
@@ -43,70 +42,36 @@ class RainbowDrumView @JvmOverloads constructor(
         }
     }
 
-    // Установка слушателя для завершения анимации
-    fun setAnimationListener(listener: Animator.AnimatorListener) {
-        animationListener = listener
-    }
-
-    fun rotateDrum() {
-        endDeg = (random.nextInt(360) + 360).toFloat()
-        val rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", startDeg, endDeg)
-        startDeg = endDeg
-        rotationAnimator.duration = 1000 // Продолжительность анимации в миллисекундах
-        rotationAnimator.repeatCount = 2
-        rotationAnimator.start()
-    }
-
     fun rotateDrumRandomly() {
         endDeg = (random.nextInt(360)).toFloat()
         rotationAnimator = ObjectAnimator.ofFloat(this, "rotation", startDeg, endDeg)
         rotationAnimator!!.duration = 1000 // Продолжительность анимации в миллисекундах
-
-        rotationAnimator!!.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animator: Animator) {}
-
-            override fun onAnimationEnd(animator: Animator) {}
-
-            override fun onAnimationCancel(animator: Animator) {}
-
-            override fun onAnimationRepeat(animator: Animator) {}
-        })
-
-//        rotationAnimator.addListener(object : Animator.AnimatorListener {
-//
-//            override fun onAnimationStart(p0: Animator) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onAnimationEnd(animation: Animator) {
-////                // Получение угла поворота барабана
-////                val rotation = this@RainbowDrumView.rotation % 360
-////
-////                // Определение цвета по углу поворота
-////                val segmentAngle = 360f / colors.size
-////                val segmentIndex = (rotation / segmentAngle).toInt()
-////                val topSegmentColor = colors[segmentIndex]
-////
-////                // Вызов слушателя с цветом верхнего сегмента
-////                animationListener?.onAnimationEnd(animation)
-//////                animationListener?.onAnimationEndWithColor(topSegmentColor)
-//            }
-//
-//            override fun onAnimationCancel(p0: Animator) {}
-//
-//            override fun onAnimationRepeat(p0: Animator) {}
-//        })
-
+        rotationAnimator!!.addListener(animationListener)
         rotationAnimator!!.start()
-
-
     }
 
-    private fun getRandomDuration(): Long {
-        return Random().nextInt(3000) + 1000L // от 1000 до 4000 миллисекунд
+    private val animationListener = object :Animator.AnimatorListener {
+        override fun onAnimationStart(animator: Animator) {}
+
+        override fun onAnimationEnd(animator: Animator) {
+            getSegmentNumber()
+        }
+
+        override fun onAnimationCancel(animator: Animator) {}
+
+        override fun onAnimationRepeat(animator: Animator) {}
     }
 
-    private fun getRandomAngle(): Float {
-        return Random().nextInt(360).toFloat()
+    private fun getSegmentNumber(): Int {
+        // Получение угла поворота барабана
+        val rotation = this@RainbowDrumView.rotation % 360
+
+        // Определение цвета по углу поворота
+        val segmentAngle = 360f / colors.size
+        val segmentIndex = (rotation / segmentAngle).toInt()
+        Log.d("QWERTY", "$rotation, $segmentIndex ")
+        val topSegmentColor = colors[segmentIndex]
+
+        return segmentIndex
     }
 }

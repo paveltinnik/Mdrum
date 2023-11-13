@@ -49,8 +49,4 @@ class CustomImageView @JvmOverloads constructor(
         imageBitmap = null
         invalidate()
     }
-
-    fun initTarget() {
-
-    }
 }

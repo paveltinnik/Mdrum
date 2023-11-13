@@ -4,10 +4,8 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import java.util.Random
 
@@ -17,12 +15,13 @@ class RainbowDrumView @JvmOverloads constructor(
 
     private val paint = Paint()
     private val colors: IntArray = context.resources.getIntArray(R.array.rainbow_colors)
+    private var rotationAnimator: ObjectAnimator? = null
+    private var customImageView: CustomImageView? = null
+    private var customTextView: CustomTextView? = null
 
     private val random = Random()
     private var startDeg = 0f
     private var endDeg = 0f
-
-    var rotationAnimator: ObjectAnimator? = null
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -50,11 +49,17 @@ class RainbowDrumView @JvmOverloads constructor(
         rotationAnimator!!.start()
     }
 
-    private val animationListener = object :Animator.AnimatorListener {
+    private val animationListener = object : Animator.AnimatorListener {
         override fun onAnimationStart(animator: Animator) {}
 
         override fun onAnimationEnd(animator: Animator) {
-            getSegmentNumber()
+            if (getSegmentNumber() in intArrayOf(0, 2, 4, 6)) {
+                customImageView?.resetView()
+                customTextView?.drawText()
+            } else {
+                customTextView?.resetView()
+                customImageView?.loadImage()
+            }
         }
 
         override fun onAnimationCancel(animator: Animator) {}
@@ -65,13 +70,17 @@ class RainbowDrumView @JvmOverloads constructor(
     private fun getSegmentNumber(): Int {
         // Получение угла поворота барабана
         val rotation = this@RainbowDrumView.rotation % 360
-
         // Определение цвета по углу поворота
         val segmentAngle = 360f / colors.size
         val segmentIndex = (rotation / segmentAngle).toInt()
-        Log.d("QWERTY", "$rotation, $segmentIndex ")
-        val topSegmentColor = colors[segmentIndex]
-
         return segmentIndex
+    }
+
+    fun setCustomImageView(customImageView: CustomImageView) {
+        this.customImageView = customImageView
+    }
+
+    fun setCustomTextView(customTextView: CustomTextView) {
+        this.customTextView = customTextView
     }
 }
